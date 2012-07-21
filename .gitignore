@@ -1,0 +1,6 @@
+# Compiled Object files
+*.pyc
+
+# tmp file
+*~
+*.swp
