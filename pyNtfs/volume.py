@@ -45,7 +45,7 @@ class NTFSVolume(object):
 
     def isXp(self):
         (majorVer, minorVer, _1, _2, _3) = win32api.GetVersionEx()
-        if (majorVer > 5) or ((majorVer == 5) and (minorVer >= 1)):
+        if (majorVer > 5) or ((majorVer == 5) and (minorVer > 1)):
             return False
         else:
             return True
@@ -96,7 +96,7 @@ class NTFSVolume(object):
         return self.raw_read(self.cluster_size*cluster, self.cluster_size*size)
     
     def shred(self, mftno, filled):
-        logging.error('shred MFT#%d [%d]'%(mftno, filled))
+        logging.info('shred MFT#%d [%d]'%(mftno, filled))
         off = self.dbr.mft_len * self.cluster_size
         self.raw_write(off+mftno*1024, 1024)
     

@@ -16,13 +16,15 @@ class TreeView(Tix.CheckList):
         self.autosetmode()
         
     def build_tree(self):    
-        hlist = self.hlist        
         for mfti in self.model.enum_mft(isFile=False, isDel=False):        
-            path = self.model.find_path(mfti)
-            if mfti.isDir:
-                self.build_dir(path, mfti)
-            else:
-                self.build_file(path, mfti)
+            try:
+                path = self.model.find_path(mfti)
+                if mfti.isDir:
+                    self.build_dir(path, mfti)
+                else:
+                    self.build_file(path, mfti)
+            except:
+                continue
             
     def build_dir(self, path, mfti):
         """ Build 
@@ -54,3 +56,24 @@ class TreeView(Tix.CheckList):
             else:
                 hlist.add(path, text=os.path.basename(path), data=mfti.mftno)            
             self.setstatus(path, 'off')            
+
+    def get_selects(self):
+        """ Return selects """
+        
+        selects = []
+        it = iter(self.getselection('on'))
+        try:
+            while True:
+                # hack for full path
+                sel = next(it)
+                if isinstance(sel, tuple):
+                    sel = ' '.join(sel)
+                else:
+                    while self.hlist.info_exists(sel) != u'1':
+                        sel = sel + ' ' + next(it)
+                selects.append(sel)
+        except StopIteration:
+            selects.sort()
+            selects.reverse()
+            return selects
+                
