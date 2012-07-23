@@ -8,6 +8,7 @@ import os
 class TreeView(Tix.CheckList):
     def __init__(self, master, model, **kw):
         kw['options'] = 'hlist.separator /'
+        kw['browsecmd'] = self.browsecmd
         Tix.CheckList.__init__(self, master, kw)
         self.model = model
         self.fileStyle = Tix.DisplayStyle(Tix.IMAGETEXT, refwindow=self.hlist, fg='red')
@@ -59,7 +60,6 @@ class TreeView(Tix.CheckList):
 
     def get_selects(self):
         """ Return selects """
-        
         selects = []
         it = iter(self.getselection('on'))
         try:
@@ -76,4 +76,14 @@ class TreeView(Tix.CheckList):
             selects.sort()
             selects.reverse()
             return selects
-                
+
+    def browsecmd(self, sel):
+        print self.getstatus(sel)
+        self.reverse_select(sel, self.getstatus(sel))
+
+    def reverse_select(self, sel, bselected):
+        """Select all in children"""
+        children = self.hlist.info_children(sel)
+        for item in children:
+            self.setstatus(item, bselected)
+            self.reverse_select(item, bselected)

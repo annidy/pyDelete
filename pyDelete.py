@@ -142,18 +142,6 @@ class ResaultGui(object):
                 self.tree.hlist.delete_entry(sel) # like DIRXXXX
             print 'delete entry', sel
 
-    def shared2(self, sel):
-        chidren = self.tree.hlist.info_children(sel)
-        for item in chidren:
-            self.shared2(item)
-            if self.tree.getstatus(item) == u'1':
-                mftno = int(self.tree.hlist.info_data(sel)) #info_data return unicode
-                if mftno:
-                    if self.tree.model.mfts_dict[mftno].isExists == False:
-                        self.ntfsvol.shred(mftno, self.filled.get())
-                        self.tree.hlist.delete_entry(sel)
-                else:
-                    self.tree.hlist.delete_entry(sel) # like DIRXXXX
 
 root = Tix.Tk()
 mainWindow = Application(root)
